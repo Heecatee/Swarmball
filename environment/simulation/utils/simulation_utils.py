@@ -1,8 +1,8 @@
 import collections
 
-VELOCITY_COEFFICIENT = 0.85
-MAX_BOT_VELOCITY = 40
-MIN_BOT_VELOCITY = -40
+VELOCITY_COEFFICIENT = 1.2
+MAX_BOT_VELOCITY = 80
+MIN_BOT_VELOCITY = -80
 
 
 class Threshold:
@@ -17,10 +17,8 @@ class Cluster:
         self.threshold = threshold
         self.bots = bots
 
-
-# get angular velocity proportional to distance from threshold
 def get_bot_velocity(threshold_position, bot_position):
-    bot_velocity = (bot_position - threshold_position) * VELOCITY_COEFFICIENT
+    bot_velocity = (threshold_position - bot_position) * VELOCITY_COEFFICIENT
     if bot_velocity > MAX_BOT_VELOCITY:
         bot_velocity = MAX_BOT_VELOCITY
     elif bot_velocity < MIN_BOT_VELOCITY:
