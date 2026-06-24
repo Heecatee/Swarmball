@@ -1,0 +1,38 @@
+services:
+  swarmball:
+    build: .
+    volumes:
+      - .:/app
+
+  simulation:
+    build: .
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
+      - SDL_VIDEODRIVER=x11
+      - SDL_AUDIODRIVER=dummy
+      - LIBGL_ALWAYS_SOFTWARE=1
+    command: python -m environment.simulation.simulation
+
+  test:
+    build: .
+    volumes:
+      - .:/app
+    command: pytest -q
+
+  lint:
+    build: .
+    volumes:
+      - .:/app
+    command: ruff check .
+
+  gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    volumes:
+      - .:/app
+    gpus: all
+    command: python3 -c "import torch; print(torch.__version__); print('CUDA available:', torch.cuda.is_available()); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU')"
